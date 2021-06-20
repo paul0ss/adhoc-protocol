@@ -125,7 +125,9 @@ def read_from_port(ser):
                             print('in routing table')
                         #not in routing table
                         else:
+                            print("Not in the table")
                             hop_count += 1
+                            print(protocol.generate_RREQ(uflag, hop_count, rreq_id, originator_id, originator_seq, destination_id, destination_seq))
                             write_protocol_message(protocol.generate_RREQ(uflag, hop_count, rreq_id, originator_id, originator_seq, destination_id, destination_seq))
 
         time.sleep(1)
