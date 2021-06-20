@@ -105,6 +105,13 @@ def read_from_port(ser):
                 payload = reading[12:]
                 print('Sender: ' + str(previuous_hop))
                 print('Payload: ' + str(payload))
+                ##CASE RREQ
+                print('------------------------------------')
+                print(payload[0])
+                if(payload[0] == 1):
+                    print('ITS RREQ')
+                    if(payload[6] == 2):
+                        print('For me!!!')
         time.sleep(1)
 
 # writes a Message
