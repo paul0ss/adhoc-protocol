@@ -92,7 +92,7 @@ def handle_data(data):
 def read_from_port(ser):
     while True:
         reading = ser.readline()
-        if((not reading.startswith("AT")) and reading != ""):
+        if((not reading.startswith(b"AT")) and reading != b""):
             # partials = reading.split(',', 3)
             # print('Recieved message from ' + partials[1] + ': ' + partials[3])
             print(reading)
