@@ -115,7 +115,7 @@ def read_from_port(ser):
                     destination_id = int(chr(payload[6]))
                     destination_seq = int(chr(payload[7]))
                     #For me
-                    if(destination_id == str(clientID)):
+                    if(destination_id == clientID):
                         print('For me!!!')
                     #Not for me
                     else:
