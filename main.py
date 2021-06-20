@@ -4,6 +4,7 @@ import serial
 import time
 import os
 import socket
+import protocol
 
 connected = False
 port = '/dev/ttyS0'
@@ -31,10 +32,27 @@ def write_sys_message(message):
         answer = ''
         serial_port.write(bytes(str(message) + '\r\n', 'ascii'))
         time.sleep(1)
+    
+def write_protocol_message(message):
+    lock = threading.RLock()
+    global serial_port
+    if(serial_port.is_open == False):
+        serial_port.open()
+    with lock:
+        answer = ''
+        number_bytes = len(message.encode('ascii'))
+        # Writes AT-Command: AT+SEND=number_of_bytes_to_be_sent
+        serial_port.write(bytes('AT+SEND='+str(number_bytes)+'\r\n', 'ascii'))
+        time.sleep(0.5)
+        serial_port.write(message)
+        print(str(message))
+        time.sleep(1)
 
 def setup():
     print('Welcome to the chat, ' + socket.gethostname() + '!')
     global serial_port
+    global protocol
+    protocol = protocol.Protocol(2)
     # port = input('Enter your Port... \n')
     # port = '/dev/ttyS0'
     # global baudrate
@@ -55,6 +73,8 @@ def setup():
     write_sys_message('AT')
     write_sys_message('AT+' + config)
     write_sys_message('AT+RX')
+    #RREQ TEST
+    write_protocol_message(protocol.create_RREQ(1))
 
     #Print command List:
     print('')
