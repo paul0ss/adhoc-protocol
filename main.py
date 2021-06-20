@@ -109,7 +109,7 @@ def read_from_port(ser):
                 ##CASE RREQ
                 print('------------------------------------')
                 print(payload[0])
-                if(chr(payload[0]) == '1'):
+                if(message_type == 1):
                     uflag = int(chr(payload[1]))
                     hop_count = int(chr(payload[2]))
                     rreq_id = int(chr(payload[3]))
@@ -117,6 +117,7 @@ def read_from_port(ser):
                     originator_seq = int(chr(payload[5]))
                     destination_id = int(chr(payload[6]))
                     destination_seq = int(chr(payload[7]))
+                    print('uflag '+str(uflag) + ', hop_count '+str(hop_count)+ ", rreq_id "+str(rreq_id)+", originator_id "+str(originator_id)+", originator_seq "+str(originator_seq))
                     #For me
                     if(destination_id == clientID):
                         print('For me!!!')
