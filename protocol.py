@@ -29,6 +29,14 @@ class Protocol:
             if((time.time() - stamp) < 180):
                 self.routing_table.get(key)[5] = False
     
+    def convert_to_bytes(self, non_byte_input):
+        if isinstance(non_byte_input, str):
+            return non_byte_input.encode()
+        elif isinstance(non_byte_input, int):
+            return bytes([non_byte_input])
+        else:
+            raise ValueError
+    
     def create_RREQ(self, destination_adress):
         message_type = 1 #Field 1
         hop_count = 0 #Field 3
@@ -40,8 +48,16 @@ class Protocol:
         else:
             uflag = 1
             seq = 0
-        rreq = str(message_type) + str(uflag) + str(hop_count) + str(self.RREQ_ID) + str(self.my_adress) + str(self.my_seq) + str(destination_adress) + str(seq) + '\r\n'
-        return bytes(rreq, 'ascii')
+        #rreq = str(message_type) + str(uflag) + str(hop_count) + str(self.RREQ_ID) + str(self.my_adress) + str(self.my_seq) + str(destination_adress) + str(seq) + '\r\n'
+        #return bytes(rreq, 'ascii')
+        return b"".join([self.convert_to_bytes(message_type),
+                        self.convert_to_bytes(uflag),
+                        self.convert_to_bytes(hop_count),
+                        self.convert_to_bytes(self.RREQ_ID),
+                        self.convert_to_bytes(self.my_adress),
+                        self.convert_to_bytes(self.my_seq),
+                        self.convert_to_bytes(destination_adress),
+                        self.convert_to_bytes(seq), b'\r\n'])
 
     def create_RREP(self, originator_adress, destination_adress, originator_seq, destination_seq, previous_hop, rreq_hop_count):
         message_type = 2 #Field 1
