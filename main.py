@@ -103,6 +103,7 @@ def read_from_port(ser):
             if(reading.startswith(b"LR")):
                 previuous_hop = reading[5:7]
                 payload = reading[11:]
+                message_type = int(payload[0])
                 ##CASE RREQ
                 print('------------------------------------')
                 print(payload[0])
@@ -121,10 +122,11 @@ def read_from_port(ser):
                     else:
                         #in routing table
                         if(protocol.check_routing_table(destination_id)):
-                            print()
+                            print('in routing table')
                         #not in routing table
                         else:
                             hop_count += 1
+                            write_protocol_message(protocol.generate_RREQ(uflag, hop_count, rreq_id, originator_id, originator_seq, destination_id, destination_seq))
 
         time.sleep(1)
 
