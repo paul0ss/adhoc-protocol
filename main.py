@@ -71,7 +71,9 @@ def setup():
     print('└----------------------------------------┘')
 
     serial_port = serial.Serial(port, timeout=0, baudrate=115200)
+    write_sys_message('AT+RST')
     write_sys_message('AT')
+    write_sys_message('AT+ADDR=0002')
     write_sys_message('AT+' + config)
     write_sys_message('AT+RX')
     #RREQ TEST
