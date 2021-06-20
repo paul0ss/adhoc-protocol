@@ -100,7 +100,11 @@ def read_from_port(ser):
             # print('Recieved message from ' + partials[1] + ': ' + partials[3])
             print(reading)
             #print(reading[:11])
-            print('Sender: '+ reading[5:8])
+            if(reading.startswith(b"LR")):
+                previuous_hop = reading[5:7]
+                payload = reading[12:]
+                print('Sender: ' + str(previuous_hop))
+                print('Payload: ' + str(payload))
         time.sleep(1)
 
 # writes a Message
