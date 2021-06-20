@@ -13,7 +13,8 @@ timeout = 0
 clientID = '0002'
 
 # serial_port = serial.Serial(port, timeout=0)
-config = 'AT+CFG=433000000,5,9,6,4,1,0,0,0,0,3000,8,10'
+# config = 'AT+CFG=433000000,5,9,6,4,1,0,0,0,0,3000,8,10'
+config = 'AT+CFG=433000000,20,9,12,4,1,0,0,0,0,3000,8,4'
 
 def read_sys_answer():
      loop = True
@@ -40,7 +41,7 @@ def write_protocol_message(message):
         serial_port.open()
     with lock:
         answer = ''
-        number_bytes = len(message.encode('ascii'))
+        number_bytes = len(message)
         # Writes AT-Command: AT+SEND=number_of_bytes_to_be_sent
         serial_port.write(bytes('AT+SEND='+str(number_bytes)+'\r\n', 'ascii'))
         time.sleep(0.5)
