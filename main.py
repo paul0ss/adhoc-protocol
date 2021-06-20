@@ -98,6 +98,7 @@ def read_from_port(ser):
         if((not reading.startswith(b"AT")) and reading != b""):
             # partials = reading.split(',', 3)
             # print('Recieved message from ' + partials[1] + ': ' + partials[3])
+            print('Full message:')
             print(reading)
             #print(reading[:11])
             if(reading.startswith(b"LR")):
@@ -107,8 +108,6 @@ def read_from_port(ser):
                 print('Its payload:')
                 print(payload)
                 ##CASE RREQ
-                print('------------------------------------')
-                print(payload[0])
                 if(message_type == 1):
                     uflag = int(payload[1])
                     hop_count = int(payload[2])
@@ -130,6 +129,7 @@ def read_from_port(ser):
                         else:
                             print("Not in the table")
                             hop_count += 1
+                            print('Forwarded message:')
                             print(protocol.generate_RREQ(uflag, hop_count, rreq_id, originator_id, originator_seq, destination_id, destination_seq))
                             write_protocol_message(protocol.generate_RREQ(uflag, hop_count, rreq_id, originator_id, originator_seq, destination_id, destination_seq))
 
