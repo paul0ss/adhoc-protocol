@@ -10,7 +10,7 @@ connected = False
 port = '/dev/ttyS0'
 baudrate=115200
 timeout = 0
-clientID = '0002'
+clientID = 2
 
 # serial_port = serial.Serial(port, timeout=0)
 # config = 'AT+CFG=433000000,5,9,6,4,1,0,0,0,0,3000,8,10'
@@ -73,7 +73,7 @@ def setup():
     serial_port = serial.Serial(port, timeout=0, baudrate=115200)
     write_sys_message('AT+RST')
     write_sys_message('AT')
-    write_sys_message('AT+ADDR=0002')
+    write_sys_message('AT+ADDR='+str(clientID))
     write_sys_message('AT+ADDR?')
     write_sys_message(config)
     write_sys_message('AT+RX')
@@ -102,15 +102,15 @@ def read_from_port(ser):
             #print(reading[:11])
             if(reading.startswith(b"LR")):
                 previuous_hop = reading[5:7]
-                payload = reading[12:]
+                payload = reading[11:]
                 print('Sender: ' + str(previuous_hop))
                 print('Payload: ' + str(payload))
                 ##CASE RREQ
                 print('------------------------------------')
                 print(payload[0])
-                if(payload[0] == 1):
+                if(chr(payload[0]) == '1'):
                     print('ITS RREQ')
-                    if(payload[6] == 2):
+                    if(chr(payload[6]) == str(clientID)):
                         print('For me!!!')
         time.sleep(1)
 
