@@ -104,6 +104,8 @@ def read_from_port(ser):
                 previuous_hop = reading[5:7]
                 payload = reading[11:]
                 message_type = int(payload[0])
+                print('Its payload:')
+                print(payload)
                 ##CASE RREQ
                 print('------------------------------------')
                 print(payload[0])
