@@ -75,7 +75,7 @@ def setup():
     write_sys_message('AT')
     write_sys_message('AT+ADDR=0002')
     write_sys_message('AT+ADDR?')
-    write_sys_message('AT+' + config)
+    write_sys_message(config)
     write_sys_message('AT+RX')
     #RREQ TEST
     # write_protocol_message(protocol.create_RREQ(9))
@@ -99,6 +99,8 @@ def read_from_port(ser):
             # partials = reading.split(',', 3)
             # print('Recieved message from ' + partials[1] + ': ' + partials[3])
             print(reading)
+            #print(reading[:11])
+            print('Sender: '+ reading[5:8])
         time.sleep(1)
 
 # writes a Message

@@ -83,8 +83,12 @@ class Protocol:
             self.routing_table[originator_adress] = [originator_seq, rreq_hop_count, previous_hop, list().append(previous_hop), True, True, time.time()]
         self.check_lifetime()
         time_to_live = time.time() - self.routing_table.get(destination_adress)[6]
-        rrep = str(message_type) + str(hop_count) + str(originator_adress) + str(destination_adress) + str(dest_seq) + str(time_to_live) + '\r\n'
-        return rrep
+        return b"".join([self.convert_to_bytes(message_type),
+                        self.convert_to_bytes(hop_count),
+                        self.convert_to_bytes(originator_adress),
+                        self.convert_to_bytes(destination_adress),
+                        self.convert_to_bytes(dest_seq),
+                        self.convert_to_bytes(time_to_live)])
 
     def create_RERR(self):
         print('its route error')
