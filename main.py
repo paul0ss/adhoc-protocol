@@ -137,7 +137,8 @@ def write_message():
     if(serial_port.is_open == False):
         serial_port.open()
     with lock:
-        dest = input('Enter the destination')
+        dest = int(input('Enter the destination'))
+        #dest_int = int(dest)
         exists = protocol.check_routing_table(dest)
         if(exists == True):
             message = input('Your Message:')
