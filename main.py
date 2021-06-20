@@ -74,6 +74,7 @@ def setup():
     write_sys_message('AT+RST')
     write_sys_message('AT')
     write_sys_message('AT+ADDR=0002')
+    write_sys_message('AT+ADDR?')
     write_sys_message('AT+' + config)
     write_sys_message('AT+RX')
     #RREQ TEST
