@@ -45,6 +45,17 @@ class Protocol:
 
     def message_handler(self, message):
         print('handling a message')
+
+    def generate_RREQ(self, uflag, hop_count, rreq_id, originator_adress, originator_seq, destination_adress, destination_seq):
+        message_type = 1 #Field 1
+        return b"".join([self.convert_to_bytes(message_type),
+                        self.convert_to_bytes(uflag),
+                        self.convert_to_bytes(hop_count),
+                        self.convert_to_bytes(self.RREQ_ID),
+                        self.convert_to_bytes(self.my_adress),
+                        self.convert_to_bytes(self.my_seq),
+                        self.convert_to_bytes(destination_adress),
+                        self.convert_to_bytes(destination_seq)])
     
     def create_RREQ(self, destination_adress):
         message_type = 1 #Field 1
@@ -59,14 +70,15 @@ class Protocol:
             seq = 0
         #rreq = str(message_type) + str(uflag) + str(hop_count) + str(self.RREQ_ID) + str(self.my_adress) + str(self.my_seq) + str(destination_adress) + str(seq) + '\r\n'
         #return bytes(rreq, 'ascii')
-        return b"".join([self.convert_to_bytes(message_type),
-                        self.convert_to_bytes(uflag),
-                        self.convert_to_bytes(hop_count),
-                        self.convert_to_bytes(self.RREQ_ID),
-                        self.convert_to_bytes(self.my_adress),
-                        self.convert_to_bytes(self.my_seq),
-                        self.convert_to_bytes(destination_adress),
-                        self.convert_to_bytes(seq)])
+        # return b"".join([self.convert_to_bytes(message_type),
+        #                 self.convert_to_bytes(uflag),
+        #                 self.convert_to_bytes(hop_count),
+        #                 self.convert_to_bytes(self.RREQ_ID),
+        #                 self.convert_to_bytes(self.my_adress),
+        #                 self.convert_to_bytes(self.my_seq),
+        #                 self.convert_to_bytes(destination_adress),
+        #                 self.convert_to_bytes(seq)])
+        return self.generate_RREQ(uflag, hop_count, self.RREQ_ID, self.my_adress, self.my_seq, destination_adress, seq)
 
     def create_RREP(self, originator_adress, destination_adress, originator_seq, destination_seq, previous_hop, rreq_hop_count):
         message_type = 2 #Field 1

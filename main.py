@@ -103,15 +103,29 @@ def read_from_port(ser):
             if(reading.startswith(b"LR")):
                 previuous_hop = reading[5:7]
                 payload = reading[11:]
-                print('Sender: ' + str(previuous_hop))
-                print('Payload: ' + str(payload))
                 ##CASE RREQ
                 print('------------------------------------')
                 print(payload[0])
                 if(chr(payload[0]) == '1'):
-                    print('ITS RREQ')
-                    if(chr(payload[6]) == str(clientID)):
+                    uflag = int(chr(payload[1]))
+                    hop_count = int(chr(payload[2]))
+                    rreq_id = int(chr(payload[3]))
+                    originator_id = int(chr(payload[4]))
+                    originator_seq = int(chr(payload[5]))
+                    destination_id = int(chr(payload[6]))
+                    destination_seq = int(chr(payload[7]))
+                    #For me
+                    if(destination_id == str(clientID)):
                         print('For me!!!')
+                    #Not for me
+                    else:
+                        #in routing table
+                        if(protocol.check_routing_table(destination_id)):
+                            print()
+                        #not in routing table
+                        else:
+                            hop_count += 1
+
         time.sleep(1)
 
 # writes a Message
