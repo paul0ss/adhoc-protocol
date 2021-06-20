@@ -65,7 +65,7 @@ def setup():
     print('| Settings:                              |')
     print('|----------------------------------------|')
     print('| Port           ' + port + '              |')
-    print('| Baudrate       ' + str(baudrate) + '                  |')
+    print('| Baudrate       ' + str(baudrate) + '                 |')
     print('| Timeout        ' + str(timeout) + '                       |')
     print('| ClientID       ' + str(clientID) + '                    |')
     print('└----------------------------------------┘')
@@ -75,7 +75,7 @@ def setup():
     write_sys_message('AT+' + config)
     write_sys_message('AT+RX')
     #RREQ TEST
-    write_protocol_message(protocol.create_RREQ(1))
+    # write_protocol_message(protocol.create_RREQ(9))
 
     #Print command List:
     print('')
@@ -93,8 +93,9 @@ def read_from_port(ser):
     while True:
         reading = ser.readline().decode('ascii')
         if((not reading.startswith("AT")) and reading != ""):
-            partials = reading.split(',', 3)
-            print('Recieved message from ' + partials[1] + ': ' + partials[3])
+            # partials = reading.split(',', 3)
+            # print('Recieved message from ' + partials[1] + ': ' + partials[3])
+            print(reading)
         time.sleep(1)
 
 # writes a Message
@@ -104,13 +105,22 @@ def write_message():
     if(serial_port.is_open == False):
         serial_port.open()
     with lock:
-        message = input('Your Message:')
-        number_bytes = len(message.encode('ascii'))
+        dest = input('Enter the destination')
+        exists = protocol.check_routing_table(dest)
+        if(exists == True):
+            message = input('Your Message:')
+            number_bytes = len(message.encode('ascii'))
+            serial_port.write(bytes('AT+DEST='+str(dest)+'\r\n', 'ascii'))
+            time.sleep(0.5)
+            serial_port.write(bytes('AT+SEND='+str(number_bytes)+'\r\n', 'ascii'))
+            time.sleep(0.5)
+            # Writes the payload
+            serial_port.write(bytes(message + '\r\n', 'ascii'))
+        else:
+            write_protocol_message(protocol.create_RREQ(dest))
         # Writes AT-Command: AT+SEND=number_of_bytes_to_be_sent
-        serial_port.write(bytes('AT+SEND='+str(number_bytes)+'\r\n', 'ascii'))
-        time.sleep(0.5)
-        # Writes the payload
-        serial_port.write(bytes(message + '\r\n', 'ascii'))
+        
+        
 
 def readIO():
     loop = True

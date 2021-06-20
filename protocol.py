@@ -18,6 +18,12 @@ class Protocol:
 
     # def peer_discovery(self):
 
+    def check_routing_table(self, id):
+        if id in self.routing_table:
+            return self.routing_table.get(id)[5] 
+        else:
+            return False
+
     def incrementMySeq(self):
         self.my_seq += 1
         self.routing_table.get(self.my_adress)[0] = self.my_seq
@@ -36,6 +42,9 @@ class Protocol:
             return bytes([non_byte_input])
         else:
             raise ValueError
+
+    def message_handler(self, message):
+        print('handling a message')
     
     def create_RREQ(self, destination_adress):
         message_type = 1 #Field 1
@@ -57,7 +66,7 @@ class Protocol:
                         self.convert_to_bytes(self.my_adress),
                         self.convert_to_bytes(self.my_seq),
                         self.convert_to_bytes(destination_adress),
-                        self.convert_to_bytes(seq), b'\r\n'])
+                        self.convert_to_bytes(seq)])
 
     def create_RREP(self, originator_adress, destination_adress, originator_seq, destination_seq, previous_hop, rreq_hop_count):
         message_type = 2 #Field 1
