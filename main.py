@@ -163,7 +163,7 @@ def read_from_port(ser):
                     originator_id = int(payload[1])
                     destination_id = int(payload[2])
                     messag_seq = int(payload[3])
-                    message = payload[4].decode('ascii')
+                    message = payload[4:].decode('ascii')
                     print('Message recieved from ' + str(originator_id) + ': ' + str(message))
                 if(message_type == 6):
                     print('Recieved SHA')
