@@ -173,7 +173,10 @@ def write_message():
     if(serial_port.is_open == False):
         serial_port.open()
     with lock:
-        dest = int(input('Enter the destination: '))
+        try:
+            dest = int(input('Enter the destination: '))
+        except:
+            print('Invalid input')
         #dest_int = int(dest)
         exists = protocol.check_routing_table(dest)
         if(exists == True):
