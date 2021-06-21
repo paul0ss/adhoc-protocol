@@ -132,7 +132,7 @@ def read_from_port(ser):
                             write_sys_message('AT+DEST='+str(previuous_hop))
                             write_protocol_message(protocol.create_RREP(originator_id, destination_id, originator_seq, destination_seq, previuous_hop, hop_count))
                         #not in routing table
-                        else:
+                        elif(not originator_id == clientID):
                             #print("Not in the table")
                             hop_count += 1
                             print('Forwarded message RREQ from:' + str(originator_id))
