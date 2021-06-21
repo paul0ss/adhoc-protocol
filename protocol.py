@@ -129,6 +129,22 @@ class Protocol:
         self.msg_seq += 1
         return self.generate_SEND_TEXT_REQ(message_type, originator_address, destination_adress, self.msg_seq, message)
     
+    def generate_HOP_ACK(self, message_type, message_seq):
+        return b"".join([self.convert_to_bytes(message_seq), self.convert_to_bytes(message_seq), b"\r\n"])
+
+    def create_HOP_ACK(self, message_seq):
+        message_type = 6
+        return self.generate_HOP_ACK(message_type, message_seq)
+
+    def generate_TEXT_REQ_ACK(self, message_type, originator_adress, destination_adress, message_seq):  
+        return b"".join([self.convert_to_bytes(message_type), self.convert_to_bytes(originator_adress), self.convert_to_bytes(destination_adress), self.convert_to_bytes(message_seq)])
+
+    def create_TEXT_REQ_ACK(self, originator_address, destination_adress, message_seq):
+        message_type = 7
+        return self.generate_TEXT_REQ_ACK(message_type, originator_address, destination_adress, message_seq)
+
+
+    
 # def main():
 #     protocol = Protocol(3)
 #     # message = protocol.create_RREQ(3)
