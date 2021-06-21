@@ -147,7 +147,7 @@ def read_from_port(ser):
                     print('RREP recieved: ' + 'hopcount ' + str(hop_count) + ', originator_id ' + str(originator_id) + 'destiantiod_id ' + str(destination_id) + ', destination_seq ' + str(destination_seq) + ', lifetime ' + str(lifetime))
                     write_sys_message('AT+DEST='+str(previuous_hop))
                     write_protocol_message(protocol.create_RREP_ACK())
-                    if(destination_id == clientID):
+                    if(originator_id == clientID):
                         print('RREP for me from: ' + str(destination_id))
                     else:
                         print('RREP not for me from: ' + str(destination_id))
