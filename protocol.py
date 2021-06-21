@@ -14,7 +14,7 @@ class Protocol:
         self.my_seq = 0 # seq number
         self.msg_seq = 0 # message seq number
         #dest_seq, hop_count, nexthop, precursor_list, dest_seq_valid, route_valid, lifetime
-        timestamp = datetime.timestamp(datetime.now())
+        timestamp = int(datetime.timestamp(datetime.now()))
         self.routing_table = {originator_adress: [0, 0, originator_adress, list(), True, True, timestamp]}
         print(self.routing_table)
 
@@ -22,7 +22,7 @@ class Protocol:
         return str(self.routing_table)
 
     def add_to_routing_table(self, destination_adress, dest_seq, hop_count, nexthop, precursor_list, dest_seq_valid, route_valid):
-        self.routing_table[destination_adress] = [dest_seq, hop_count, nexthop, precursor_list, dest_seq_valid, route_valid, datetime.timestamp(datetime.now())]
+        self.routing_table[destination_adress] = [dest_seq, hop_count, nexthop, precursor_list, dest_seq_valid, route_valid, int(datetime.timestamp(datetime.now()))]
         print('Added ' + str(destination_adress) + 'to my routing table!')
 
     def get_my_seq(self):
@@ -42,7 +42,7 @@ class Protocol:
     def check_lifetime(self):
         for key in self.routing_table:
             stamp = self.routing_table.get(key)[6]
-            if(datetime.timestamp(datetime.now() - stamp) < 180):
+            if(int(datetime.timestamp(datetime.now()) - stamp) < 180):
                 self.routing_table.get(key)[5] = False
     
     def convert_to_bytes(self, non_byte_input):
@@ -105,9 +105,9 @@ class Protocol:
             print('I am indermidiate')
             dest_seq = self.routing_table.get(destination_adress)[0]
             self.routing_table.get(destination_adress)[3].append(previous_hop)
-            self.routing_table[originator_adress] = [originator_seq, rreq_hop_count, previous_hop, list().append(previous_hop), True, True, datetime.timestamp(datetime.now())]
+            self.routing_table[originator_adress] = [originator_seq, rreq_hop_count, previous_hop, list().append(previous_hop), True, True, int(datetime.timestamp(datetime.now()))]
         self.check_lifetime()
-        time_to_live = datetime.timestamp(datetime.now()) - self.routing_table.get(destination_adress)[6]
+        time_to_live = int(datetime.timestamp(datetime.now())) - self.routing_table.get(destination_adress)[6]
         print(time_to_live)
         return self.generate_RREP(originator_adress, destination_adress, originator_seq, destination_seq, previous_hop, rreq_hop_count, dest_seq, time_to_live)
 
