@@ -13,7 +13,7 @@ class Protocol:
         self.my_seq = 0 # seq number
         self.msg_seq = 0 # message seq number
         #dest_seq, hop_count, nexthop, precursor_list, dest_seq_valid, route_valid, lifetime
-        timestamp = time.time()
+        timestamp = int(time.time())
         self.routing_table = {originator_adress: [0, 0, originator_adress, list(), True, True, timestamp]}
         print(self.routing_table)
 
@@ -41,7 +41,7 @@ class Protocol:
     def check_lifetime(self):
         for key in self.routing_table:
             stamp = self.routing_table.get(key)[6]
-            if((time.time() - stamp) < 180):
+            if((int(time.time()) - stamp) < 180):
                 self.routing_table.get(key)[5] = False
     
     def convert_to_bytes(self, non_byte_input):
@@ -104,9 +104,9 @@ class Protocol:
             print('I am indermidiate')
             dest_seq = self.routing_table.get(destination_adress)[0]
             self.routing_table.get(destination_adress)[3].append(previous_hop)
-            self.routing_table[originator_adress] = [originator_seq, rreq_hop_count, previous_hop, list().append(previous_hop), True, True, time.time()]
+            self.routing_table[originator_adress] = [originator_seq, rreq_hop_count, previous_hop, list().append(previous_hop), True, True, int(time.time())]
         self.check_lifetime()
-        time_to_live = int(time.time() - self.routing_table.get(destination_adress)[6])
+        time_to_live = int(time.time()) - self.routing_table.get(destination_adress)[6]
         print(time_to_live)
         return self.generate_RREP(originator_adress, destination_adress, originator_seq, destination_seq, previous_hop, rreq_hop_count, dest_seq, time_to_live)
 
