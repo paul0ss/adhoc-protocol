@@ -107,8 +107,12 @@ class Protocol:
         time_to_live = int(time.time() - self.routing_table.get(destination_adress)[6])
         return self.generate_RREP(originator_adress, destination_adress, originator_seq, destination_seq, previous_hop, rreq_hop_count, dest_seq, time_to_live)
 
-    def create_RERR(self):
-        print('its route error')
+    def create_RERR(self, destination_adress):
+        message_type = 3
+    
+    def create_RREP_ACK(self):
+        message_type = 4
+        return b"".join([self.convert_to_bytes(message_type)])
     
 # def main():
 #     protocol = Protocol(3)
