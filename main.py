@@ -117,10 +117,10 @@ def read_from_port(ser):
                     destination_id = int(payload[6])
                     destination_seq = int(payload[7])
                     print('uflag '+str(uflag) + ', hop_count '+str(hop_count)+ ", rreq_id "+str(rreq_id)+", originator_id "+str(originator_id)+", originator_seq "+str(originator_seq))
+                    if(protocol.check_routing_table(originator_id) == False):
+                        protocol.add_to_routing_table(originator_id, originator_seq, hop_count, previuous_hop, [previuous_hop], True, True)
                     #For me
                     if(destination_id == clientID):
-                        if(protocol.check_routing_table(originator_id) == False):
-                            protocol.add_to_routing_table(originator_id, originator_seq, hop_count, previuous_hop, [previuous_hop], True, True)
                         write_sys_message('AT+DEST='+str(previuous_hop))
                         write_protocol_message(protocol.create_RREP(originator_id, destination_id, originator_seq, destination_seq, previuous_hop, hop_count))
                     #Not for me
