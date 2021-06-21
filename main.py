@@ -138,13 +138,15 @@ def read_from_port(ser):
                             print('Forwarded message RREQ from:' + str(originator_id))
                             print(protocol.generate_RREQ(uflag, hop_count, rreq_id, originator_id, originator_seq, destination_id, destination_seq))
                             write_protocol_message(protocol.generate_RREQ(uflag, hop_count, rreq_id, originator_id, originator_seq, destination_id, destination_seq))
-                elif(message_type == 2):
+                if(message_type == 2):
                     hop_count = int(payload[1])
                     originator_id = int(payload[2])
                     destination_id = int(payload[3])
                     destination_seq = int(payload[4])
                     lifetime = int(payload[5])
-                    print('RREP recieved: ' + 'hopcount ' + str(hop_count) + ', originator_id ' + str(originator_id) + 'destiantiod_id ' + str(destination_id) + ', destination_seq ' + str(destination_seq) + ', lifetime ' + str(lifetime))
+                    print('RREP recieved: ' + 'hopcount ' + str(hop_count) + ', originator_id ' + str(originator_id) + ', destiantiod_id ' + str(destination_id) + ', destination_seq ' + str(destination_seq) + ', lifetime ' + str(lifetime))
+                    if(protocol.check_routing_table(destination_id) == False):
+                        protocol.add_to_routing_table(destination_id, destination_seq, hop_count, previuous_hop, [previuous_hop], True, True)
                     write_sys_message('AT+DEST='+str(previuous_hop))
                     write_protocol_message(protocol.create_RREP_ACK())
                     if(originator_id == clientID):
