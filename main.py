@@ -133,7 +133,7 @@ def read_from_port(ser):
                         else:
                             #print("Not in the table")
                             hop_count += 1
-                            print('Forwarded message RREQ from:' + originator_id)
+                            print('Forwarded message RREQ from:' + str(originator_id))
                             print(protocol.generate_RREQ(uflag, hop_count, rreq_id, originator_id, originator_seq, destination_id, destination_seq))
                             write_protocol_message(protocol.generate_RREQ(uflag, hop_count, rreq_id, originator_id, originator_seq, destination_id, destination_seq))
                 elif(message_type == 2):
