@@ -42,7 +42,9 @@ class Protocol:
     def check_lifetime(self):
         for key in self.routing_table:
             stamp = self.routing_table.get(key)[6]
-            if(int(datetime.timestamp(datetime.now()) - stamp) < 180):
+            result = int(datetime.timestamp(datetime.now()) - stamp)
+            print('Result: ' + str(result))
+            if(result < 180):
                 self.routing_table.get(key)[5] = False
     
     def convert_to_bytes(self, non_byte_input):
