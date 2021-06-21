@@ -119,6 +119,7 @@ def read_from_port(ser):
                     #For me
                     if(destination_id == clientID):
                         print('RREQ for me: ' + 'uflag '+str(uflag) + ', hop_count '+str(hop_count)+ ", rreq_id "+str(rreq_id)+", originator_id "+str(originator_id)+", originator_seq "+str(originator_seq))
+                        print('previous hop: ' + str(previuous_hop))
                         write_sys_message('AT+DEST='+str(previuous_hop))
                         write_protocol_message(protocol.create_RREP(originator_id, destination_id, originator_seq, destination_seq, previuous_hop, hop_count))
                     #Not for me
@@ -127,6 +128,7 @@ def read_from_port(ser):
                         #in routing table
                         if(protocol.check_routing_table(destination_id)):
                             #print('in routing table')
+                            print('previous hop: ' + str(previuous_hop))
                             write_sys_message('AT+DEST='+str(previuous_hop))
                             write_protocol_message(protocol.create_RREP(originator_id, destination_id, originator_seq, destination_seq, previuous_hop, hop_count))
                         #not in routing table
