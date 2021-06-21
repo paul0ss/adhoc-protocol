@@ -118,12 +118,12 @@ def read_from_port(ser):
                         protocol.add_to_routing_table(originator_id, originator_seq, hop_count, previuous_hop, [previuous_hop], True, True)
                     #For me
                     if(destination_id == clientID):
-                        print('RREQ for me: ' + reading)
+                        print('RREQ for me: ' + 'uflag '+str(uflag) + ', hop_count '+str(hop_count)+ ", rreq_id "+str(rreq_id)+", originator_id "+str(originator_id)+", originator_seq "+str(originator_seq))
                         write_sys_message('AT+DEST='+str(previuous_hop))
                         write_protocol_message(protocol.create_RREP(originator_id, destination_id, originator_seq, destination_seq, previuous_hop, hop_count))
                     #Not for me
                     else:
-                        print('RREQ NOT for me: ' + reading)
+                        print('RREQ NOT for me: ' + 'uflag '+str(uflag) + ', hop_count '+str(hop_count)+ ", rreq_id "+str(rreq_id)+", originator_id "+str(originator_id)+", originator_seq "+str(originator_seq))
                         #in routing table
                         if(protocol.check_routing_table(destination_id)):
                             #print('in routing table')
@@ -146,9 +146,9 @@ def read_from_port(ser):
                     write_protocol_message(protocol.create_RREP_ACK())
                     print('DestinationID-RREP: ' + destination_id)
                     if(destination_id == clientID):
-                        print('RREP for me' + reading)
+                        print('RREP for me from: ' + str(destination_id))
                     else:
-                        print('RREP not for me' + reading)
+                        print('RREP not for me from: ' + str(destination_id))
 
         time.sleep(1)
 
