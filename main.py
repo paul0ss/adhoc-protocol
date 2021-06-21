@@ -106,16 +106,16 @@ def read_from_port(ser):
                 message_type = int(payload[0])
                 ##CASE RREQ
                 if(message_type == 1):
-                    try:
-                        uflag = int(payload[1])
-                        hop_count = int(payload[2])
-                        rreq_id = int(payload[3])
-                        originator_id = int(payload[4])
-                        originator_seq = int(payload[5])
-                        destination_id = int(payload[6])
-                        destination_seq = int(payload[7])
-                    except:
-                        print('didnt recieve some bytes')
+                    # try:
+                    uflag = int(payload[1])
+                    hop_count = int(payload[2])
+                    rreq_id = int(payload[3])
+                    originator_id = int(payload[4])
+                    originator_seq = int(payload[5])
+                    destination_id = int(payload[6])
+                    destination_seq = int(payload[7])
+                    # except:
+                    #     print('didnt recieve some bytes')
                     #print('uflag '+str(uflag) + ', hop_count '+str(hop_count)+ ", rreq_id "+str(rreq_id)+", originator_id "+str(originator_id)+", originator_seq "+str(originator_seq))
                     if(protocol.check_routing_table(originator_id) == False):
                         protocol.add_to_routing_table(originator_id, originator_seq, hop_count, previuous_hop, [previuous_hop], True, True)
