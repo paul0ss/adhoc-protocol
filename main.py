@@ -13,8 +13,8 @@ timeout = 0
 clientID = 2
 
 # serial_port = serial.Serial(port, timeout=0)
-# config = 'AT+CFG=433000000,5,9,6,4,1,0,0,0,0,3000,8,10'
-config = 'AT+CFG=433000000,20,9,12,4,1,0,0,0,0,3000,8,4'
+config = 'AT+CFG=433000000,5,9,7,4,1,0,0,0,0,3000,8,10'
+#config = 'AT+CFG=433000000,20,9,12,4,1,0,0,0,0,3000,8,4'
 
 def read_sys_answer():
      loop = True
