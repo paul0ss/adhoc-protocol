@@ -104,7 +104,7 @@ class Protocol:
             self.routing_table.get(destination_adress)[4].append(previous_hop)
             self.routing_table[originator_adress] = [originator_seq, rreq_hop_count, previous_hop, list().append(previous_hop), True, True, time.time()]
         self.check_lifetime()
-        time_to_live = time.time() - self.routing_table.get(destination_adress)[6]
+        time_to_live = int(time.time() - self.routing_table.get(destination_adress)[6])
         return self.generate_RREP(originator_adress, destination_adress, originator_seq, destination_seq, previous_hop, rreq_hop_count, dest_seq, time_to_live)
 
     def create_RERR(self):

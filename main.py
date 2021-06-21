@@ -98,7 +98,6 @@ def read_from_port(ser):
         if((not reading.startswith(b"AT")) and reading != b""):
             # partials = reading.split(',', 3)
             # print('Recieved message from ' + partials[1] + ': ' + partials[3])
-            print('Full message:')
             print(reading)
             #print(reading[:11])
             if(reading.startswith(b"LR")):
@@ -138,7 +137,16 @@ def read_from_port(ser):
                             print(protocol.generate_RREQ(uflag, hop_count, rreq_id, originator_id, originator_seq, destination_id, destination_seq))
                             write_protocol_message(protocol.generate_RREQ(uflag, hop_count, rreq_id, originator_id, originator_seq, destination_id, destination_seq))
                 elif(message_type == 2):
-                    print('recieved RREP')
+                    hop_count = int(payload[1])
+                    originator_id = int(payload[2])
+                    destination_id = int(payload[3])
+                    destination_seq = int(payload[4])
+                    lifetime = int(payload[5])
+                    if(destination_id == clientID):
+                        print('RREP for me')
+                    else:
+                        print('RREP not for me')
+
         time.sleep(1)
 
 # writes a Message
