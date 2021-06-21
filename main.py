@@ -164,13 +164,28 @@ def read_from_port(ser):
                     destination_id = int(payload[2])
                     messag_seq = int(payload[3])
                     message = payload[4:].decode('ascii')
-                    print('Message recieved from ' + str(originator_id) + ': ' + str(message))
+                    if(destination_id == clientID):
+                        print('Message recieved from ' + str(originator_id) + ': ' + str(message))
+                        write_sys_message('AT+DEST=' + previuous_hop)
+                        write_protocol_message(protocol.create_TEXT_REQ_ACK(originator_id, destination_id, messag_seq))
+                    elif(not destination_id == clientID):
+                        write_sys_message('AT+DEST=' + previuous_hop)
+                        write_protocol_message(protocol.create_HOP_ACK(messag_seq))
+                        if(protocol.check_routing_table(destination_id)):
+                            write_sys_message('AT+DEST=' + protocol.get_next_hop)
+                            write_protocol_message(protocol.generate_SEND_TEXT_REQ(message_type, originator_id, destination_id, messag_seq, message))
+                        else:
+                            print('No route!') # ROute discovery when no route table entry
                 if(message_type == 6):
-                    print('Recieved SHA')
-                    print(reading)
+                    message_seq = int(payload[1])
+                    print('Recieved SHA for message: ' + str(message_seq))
+                    #print(reading)
                 if(message_type == 7):
-                    print('Recieved STRA')
-                    print(reading)
+                    originator_id = int(payload[1])
+                    destination_id = int(payload[2])
+                    message_seq = int(payload[3])
+                    print('Recieved STRA for message: ' + str(message_seq))
+                    #print(reading)
         time.sleep(1)
 
 # writes a Message
