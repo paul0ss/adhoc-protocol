@@ -153,7 +153,17 @@ def read_from_port(ser):
                         print('RREP for me from: ' + str(destination_id))
                     else:
                         print('RREP not for me from: ' + str(destination_id))
-
+                if(message_type == 4):
+                    print('Recieved RREP-ACK')
+                if(message_type == 5):
+                    print('Recieved STR:')
+                    print(reading)
+                if(message_type == 6):
+                    print('Recieved SHA')
+                    print(reading)
+                if(message_type == 7):
+                    print('Recieved STRA')
+                    print(reading)
         time.sleep(1)
 
 # writes a Message
@@ -163,7 +173,7 @@ def write_message():
     if(serial_port.is_open == False):
         serial_port.open()
     with lock:
-        dest = int(input('Enter the destination'))
+        dest = int(input('Enter the destination: '))
         #dest_int = int(dest)
         exists = protocol.check_routing_table(dest)
         if(exists == True):
@@ -174,7 +184,8 @@ def write_message():
             serial_port.write(bytes('AT+SEND='+str(number_bytes)+'\r\n', 'ascii'))
             time.sleep(0.5)
             # Writes the payload
-            serial_port.write(bytes(message + '\r\n', 'ascii'))
+            write_protocol_message(protocol.create_SEND_TEXT_REQ(dest, message))
+            #serial_port.write(bytes(message + '\r\n', 'ascii'))
         else:
             write_protocol_message(protocol.create_RREQ(dest))
         # Writes AT-Command: AT+SEND=number_of_bytes_to_be_sent

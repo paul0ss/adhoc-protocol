@@ -8,9 +8,10 @@ class Protocol:
     lifetime = 180
 
     def __init__(self, originator_adress):
-        self.my_adress = originator_adress
-        self.RREQ_ID = 0
-        self.my_seq = 0
+        self.my_adress = originator_adress #my adress
+        self.RREQ_ID = 0 # rreq ID number
+        self.my_seq = 0 # seq number
+        self.msg_seq = 0 # message seq number
         #dest_seq, hop_count, nexthop, precursor_list, dest_seq_valid, route_valid, lifetime
         timestamp = time.time()
         self.routing_table = {originator_adress: [0, 0, originator_adress, list(), True, True, timestamp]}
@@ -114,6 +115,15 @@ class Protocol:
     def create_RREP_ACK(self):
         message_type = 4
         return b"".join([self.convert_to_bytes(message_type), b"\r\n"])
+
+    def generate_SEND_TEXT_REQ(self, message_type, originator_address, destination_adress, message_seq, message):
+        return b"".join([self.convert_to_bytes(message_type), self.convert_to_bytes(originator_address), self.convert_to_bytes(destination_adress), self.convert_to_bytes(message_seq), self.convert_to_bytes(message), b"\r\n"])
+
+    def create_SEND_TEXT_REQ(self, destination_adress, message):
+        message_type = 5 # Field 1
+        originator_address = self.my_adress # Field 2
+        self.msg_seq += 1
+        return self.generate_SEND_TEXT_REQ(message_type, originator_address, destination_adress, self.msg_seq, message)
     
 # def main():
 #     protocol = Protocol(3)
