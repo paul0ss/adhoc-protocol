@@ -17,6 +17,14 @@ class Protocol:
         print(self.routing_table)
 
     # def peer_discovery(self):
+    def print_table(self):
+        return str(self.routing_table)
+
+    def add_to_routing_table(self, destination_adress, dest_seq, hop_count, nexthop, precursor_list, dest_seq_valid, route_valid):
+        self.routing_table[destination_adress] = [dest_seq, hop_count, nexthop, precursor_list, dest_seq_valid, route_valid, time.time()]
+
+    def get_my_seq(self):
+        return self.my_seq
 
     def check_routing_table(self, id):
         if id in self.routing_table:
@@ -69,16 +77,17 @@ class Protocol:
             uflag = 1
             seq = 0
         #rreq = str(message_type) + str(uflag) + str(hop_count) + str(self.RREQ_ID) + str(self.my_adress) + str(self.my_seq) + str(destination_adress) + str(seq) + '\r\n'
-        #return bytes(rreq, 'ascii')
-        # return b"".join([self.convert_to_bytes(message_type),
-        #                 self.convert_to_bytes(uflag),
-        #                 self.convert_to_bytes(hop_count),
-        #                 self.convert_to_bytes(self.RREQ_ID),
-        #                 self.convert_to_bytes(self.my_adress),
-        #                 self.convert_to_bytes(self.my_seq),
-        #                 self.convert_to_bytes(destination_adress),
-        #                 self.convert_to_bytes(seq)])
         return self.generate_RREQ(uflag, hop_count, self.RREQ_ID, self.my_adress, self.my_seq, destination_adress, seq)
+    
+    def generate_RREP(self, originator_adress, destination_adress, originator_seq, destination_seq, previous_hop, rreq_hop_count, dest_seq, time_to_live):
+        message_type = 2 #Field 1
+        hop_count = 0 #Field 2
+        return b"".join([self.convert_to_bytes(message_type),
+                        self.convert_to_bytes(hop_count),
+                        self.convert_to_bytes(originator_adress),
+                        self.convert_to_bytes(destination_adress),
+                        self.convert_to_bytes(dest_seq),
+                        self.convert_to_bytes(time_to_live)])
 
     def create_RREP(self, originator_adress, destination_adress, originator_seq, destination_seq, previous_hop, rreq_hop_count):
         message_type = 2 #Field 1
@@ -88,6 +97,8 @@ class Protocol:
             # dest_seq = self.my_seq
             if(destination_seq == self.my_seq):
                 dest_seq = self.incrementMySeq()
+            else:
+                dest_seq = self.my_seq
         else:
             print('I am indermidiate')
             dest_seq = self.routing_table.get(destination_adress)[0]
@@ -95,12 +106,7 @@ class Protocol:
             self.routing_table[originator_adress] = [originator_seq, rreq_hop_count, previous_hop, list().append(previous_hop), True, True, time.time()]
         self.check_lifetime()
         time_to_live = time.time() - self.routing_table.get(destination_adress)[6]
-        return b"".join([self.convert_to_bytes(message_type),
-                        self.convert_to_bytes(hop_count),
-                        self.convert_to_bytes(originator_adress),
-                        self.convert_to_bytes(destination_adress),
-                        self.convert_to_bytes(dest_seq),
-                        self.convert_to_bytes(time_to_live)])
+        return self.generate_RREP(originator_adress, destination_adress, originator_seq, destination_seq, previous_hop, rreq_hop_count, dest_seq, time_to_live)
 
     def create_RERR(self):
         print('its route error')

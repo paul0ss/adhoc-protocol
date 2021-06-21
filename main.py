@@ -102,7 +102,7 @@ def read_from_port(ser):
             print(reading)
             #print(reading[:11])
             if(reading.startswith(b"LR")):
-                previuous_hop = reading[5:7]
+                previuous_hop = int(reading[5:7])
                 payload = reading[11:]
                 message_type = int(payload[0])
                 print('Its payload:')
@@ -119,7 +119,10 @@ def read_from_port(ser):
                     print('uflag '+str(uflag) + ', hop_count '+str(hop_count)+ ", rreq_id "+str(rreq_id)+", originator_id "+str(originator_id)+", originator_seq "+str(originator_seq))
                     #For me
                     if(destination_id == clientID):
-                        print('For me!!!')
+                        if(protocol.check_routing_table(originator_id) == False):
+                            protocol.add_to_routing_table(originator_id, originator_seq, hop_count, previuous_hop, [previuous_hop], True, True)
+                        write_sys_message('AT+DEST='+str(previuous_hop))
+                        write_protocol_message(protocol.create_RREP(originator_id, destination_id, originator_seq, destination_seq, previuous_hop, hop_count))
                     #Not for me
                     else:
                         #in routing table
@@ -132,7 +135,8 @@ def read_from_port(ser):
                             print('Forwarded message:')
                             print(protocol.generate_RREQ(uflag, hop_count, rreq_id, originator_id, originator_seq, destination_id, destination_seq))
                             write_protocol_message(protocol.generate_RREQ(uflag, hop_count, rreq_id, originator_id, originator_seq, destination_id, destination_seq))
-
+                elif(message_type == 2):
+                    print('recieved RREP')
         time.sleep(1)
 
 # writes a Message
@@ -170,6 +174,8 @@ def readIO():
             os._exit(1)
         if(command == "list"):
             print("List of neighbour nodes: ")
+        if(command == 'table'):
+            print(protocol.print_table())
         else:
             print('Unknown command')
     command = ""
