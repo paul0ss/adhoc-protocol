@@ -44,7 +44,7 @@ class Protocol:
             stamp = self.routing_table.get(key)[6]
             result = int(datetime.timestamp(datetime.now()) - stamp)
             print('Result: ' + str(result))
-            if(result < 180):
+            if(result < 180000):
                 self.routing_table.get(key)[5] = False
     
     def convert_to_bytes(self, non_byte_input):
