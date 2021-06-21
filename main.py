@@ -128,6 +128,8 @@ def read_from_port(ser):
                         #in routing table
                         if(protocol.check_routing_table(destination_id)):
                             print('in routing table')
+                            write_sys_message('AT+DEST='+str(previuous_hop))
+                            write_protocol_message(protocol.create_RREP(originator_id, destination_id, originator_seq, destination_seq, previuous_hop, hop_count))
                         #not in routing table
                         else:
                             print("Not in the table")

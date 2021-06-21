@@ -16,7 +16,6 @@ class Protocol:
         self.routing_table = {originator_adress: [0, 0, originator_adress, list(), True, True, timestamp]}
         print(self.routing_table)
 
-    # def peer_discovery(self):
     def print_table(self):
         return str(self.routing_table)
 
