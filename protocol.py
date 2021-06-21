@@ -102,7 +102,7 @@ class Protocol:
         else:
             print('I am indermidiate')
             dest_seq = self.routing_table.get(destination_adress)[0]
-            self.routing_table.get(destination_adress)[4].append(previous_hop)
+            self.routing_table.get(destination_adress)[3].append(previous_hop)
             self.routing_table[originator_adress] = [originator_seq, rreq_hop_count, previous_hop, list().append(previous_hop), True, True, time.time()]
         self.check_lifetime()
         time_to_live = int(time.time() - self.routing_table.get(destination_adress)[6])
