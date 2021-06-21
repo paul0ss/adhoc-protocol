@@ -65,9 +65,9 @@ def setup():
     print('| Settings:                              |')
     print('|----------------------------------------|')
     print('| Port           ' + port + '              |')
-    print('| Baudrate       ' + str(baudrate) + '                 |')
+    print('| Baudrate       ' + str(baudrate) + '                  |')
     print('| Timeout        ' + str(timeout) + '                       |')
-    print('| ClientID       ' + str(clientID) + '                    |')
+    print('| ClientID       ' + str(clientID) + '                       |')
     print('└----------------------------------------┘')
 
     serial_port = serial.Serial(port, timeout=0, baudrate=115200)
@@ -166,7 +166,7 @@ def read_from_port(ser):
                     message = payload[4:].decode('ascii')
                     if(destination_id == clientID):
                         print('Message recieved from ' + str(originator_id) + ': ' + str(message))
-                        write_sys_message('AT+DEST=' + previuous_hop)
+                        write_sys_message('AT+DEST=' + str(previuous_hop))
                         write_protocol_message(protocol.create_TEXT_REQ_ACK(originator_id, destination_id, messag_seq))
                     elif(not destination_id == clientID):
                         write_sys_message('AT+DEST=' + previuous_hop)
