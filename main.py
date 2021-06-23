@@ -210,17 +210,18 @@ def write_message():
     if(serial_port.is_open == False):
         serial_port.open()
     with lock:
+        dest = 0
         try:
             dest = int(input('Enter the destination: '))
         except:
             print('Invalid input')
         #dest_int = int(dest)
-        if(dest == None):
+        if(dest == 0):
             return
         exists = protocol.check_routing_table(dest)
         if(exists == True):
             message = input('Your Message:')
-            number_bytes = len(message.encode('ascii'))
+            #number_bytes = len(message.encode('ascii'))
             serial_port.write(bytes('AT+DEST='+str(dest)+'\r\n', 'ascii'))
             time.sleep(0.5)
             # serial_port.write(bytes('AT+SEND='+str(number_bytes)+'\r\n', 'ascii'))
