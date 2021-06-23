@@ -166,12 +166,17 @@ def read_from_port(ser):
                     print('RREP recieved: ' + 'hopcount ' + str(hop_count) + ', originator_id ' + str(originator_id) + ', destiantiod_id ' + str(destination_id) + ', destination_seq ' + str(destination_seq) + ', lifetime ' + str(lifetime))
                     if(protocol.check_routing_table(destination_id) == False):
                         protocol.add_to_routing_table(destination_id, destination_seq, hop_count, previuous_hop, [previuous_hop], True, True)
-                    write_sys_message('AT+DEST='+str(previuous_hop))
-                    write_protocol_message(protocol.create_RREP_ACK())
                     if(originator_id == clientID):
                         print('RREP for me from: ' + str(destination_id))
+                        write_sys_message('AT+DEST='+str(previuous_hop))
+                        write_protocol_message(protocol.create_RREP_ACK())
                     else:
                         print('RREP not for me from: ' + str(destination_id))
+                        if(protocol.check_routing_table(originator_id)):  
+                            print('Forwarding RREP to ' + originator_id + ' from ' + destination_id)
+                            write_sys_message('AT+DEST='+str(previuous_hop))
+                            hop_count += 1
+                            write_protocol_message(protocol.generate_RREP(originator_id, destination_id, originator_seq, previuous_hop, hop_count, destination_seq, lifetime))
                 if(message_type == 4):
                     print('Recieved RREP-ACK')
                 if(message_type == 5):

@@ -88,7 +88,7 @@ class Protocol:
         #rreq = str(message_type) + str(uflag) + str(hop_count) + str(self.RREQ_ID) + str(self.my_adress) + str(self.my_seq) + str(destination_adress) + str(seq) + '\r\n'
         return self.generate_RREQ(uflag, hop_count, self.RREQ_ID, self.my_adress, self.my_seq, destination_adress, seq)
     
-    def generate_RREP(self, originator_adress, destination_adress, originator_seq, destination_seq, previous_hop, rreq_hop_count, dest_seq, time_to_live):
+    def generate_RREP(self, originator_adress, destination_adress, originator_seq, previous_hop, rreq_hop_count, dest_seq, time_to_live):
         message_type = 2 #Field 1
         hop_count = 0 #Field 2
         return b"".join([self.convert_to_bytes(message_type),
@@ -116,7 +116,7 @@ class Protocol:
         # self.check_lifetime()
         time_to_live = int(datetime.timestamp(datetime.now())) - self.routing_table.get(destination_adress)[6]
         print(time_to_live)
-        return self.generate_RREP(originator_adress, destination_adress, originator_seq, destination_seq, previous_hop, hop_count, dest_seq, time_to_live)
+        return self.generate_RREP(originator_adress, destination_adress, originator_seq, previous_hop, hop_count, dest_seq, time_to_live)
 
     def create_RERR(self, destination_adress):
         message_type = 3
