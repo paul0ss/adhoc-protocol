@@ -124,7 +124,7 @@ class Protocol:
         return b"".join([self.convert_to_bytes(message_type), b"\r\n"])
 
     def generate_SEND_TEXT_REQ(self, message_type, originator_address, destination_adress, message_seq, message):
-        return b"".join([self.convert_to_bytes(message_type), self.convert_to_bytes(originator_address), self.convert_to_bytes(destination_adress), self.convert_to_bytes(message_seq), message, b'\r\n'])
+        return b"".join([self.convert_to_bytes(message_type), self.convert_to_bytes(originator_address), self.convert_to_bytes(destination_adress), self.convert_to_bytes(message_seq), self.convert_to_bytes(message), b'\r\n'])
 
     def create_SEND_TEXT_REQ(self, destination_adress, message):
         message_type = 5 # Field 1
