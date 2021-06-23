@@ -215,6 +215,8 @@ def write_message():
         except:
             print('Invalid input')
         #dest_int = int(dest)
+        if(dest == None):
+            return
         exists = protocol.check_routing_table(dest)
         if(exists == True):
             message = input('Your Message:')
