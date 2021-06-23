@@ -48,8 +48,9 @@ class Protocol:
             result = int(datetime.timestamp(datetime.now())) - stamp
             print('Result: ' + str(result))
             if(result < 180):
+                if(routing_table.get(key)[5] == True):
+                    print('Node number ' + str(key) + 'is outdated')
                 self.routing_table.get(key)[5] = False
-                print('Node number ' + str(key) + 'is outdated')
     
     def convert_to_bytes(self, non_byte_input):
         if isinstance(non_byte_input, str):
