@@ -203,8 +203,9 @@ def read_from_port(ser):
 
                         #check for existense in the routing table
                         if(protocol.check_routing_table(destination_id)):
-                            print('Forwarding message to ' + str(protocol.get_next_hop))
-                            write_sys_message('AT+DEST=' + str(protocol.get_next_hop))
+                            next_hop = protocol.routing_table.get(destination_id)[2]
+                            print('Forwarding message to ' + str(next_hop))
+                            write_sys_message('AT+DEST=' + str(next_hop))
                             write_protocol_message(protocol.generate_SEND_TEXT_REQ(message_type, originator_id, destination_id, messag_seq, message))
                         else:
                             print('No route!') # ROute discovery when no route table entry
