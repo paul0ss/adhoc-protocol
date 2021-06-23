@@ -143,7 +143,7 @@ def read_from_port(ser):
                             write_protocol_message(protocol.create_RREP(originator_id, destination_id, originator_seq, destination_seq, previuous_hop, hop_count))
                         #Not for me
                         else:
-                            print('RREQ NOT for me: ' + 'uflag '+str(uflag) + ', hop_count '+str(hop_count)+ ", rreq_id "+str(rreq_id)+", originator_id "+str(originator_id)+", originator_seq "+str(originator_seq))
+                            print('RREQ for ' + str(destination_id) + ': ' + 'uflag '+str(uflag) + ', hop_count '+str(hop_count)+ ", rreq_id "+str(rreq_id)+", originator_id "+str(originator_id)+", originator_seq "+str(originator_seq))
                             #in routing table
                             if(protocol.check_routing_table(destination_id)):
                                 #print('in routing table')
