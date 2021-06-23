@@ -126,7 +126,7 @@ class Protocol:
         return b"".join([self.convert_to_bytes(message_type), b"\r\n"])
 
     def generate_SEND_TEXT_REQ(self, message_type, originator_address, destination_adress, message_seq, message):
-        return b"".join([self.convert_to_bytes(message_type), self.convert_to_bytes(originator_address), self.convert_to_bytes(destination_adress), self.convert_to_bytes(message_seq), self.convert_to_bytes(message), b'\r\n'])
+        return b"".join([self.convert_to_bytes(message_type), self.convert_to_bytes(originator_address), self.convert_to_bytes(destination_adress), self.convert_to_bytes(message_seq), self.convert_to_bytes(message)])
 
     def create_SEND_TEXT_REQ(self, destination_adress, message):
         message_type = 5 # Field 1
@@ -135,7 +135,7 @@ class Protocol:
         return self.generate_SEND_TEXT_REQ(message_type, originator_address, destination_adress, self.msg_seq, message)
     
     def generate_HOP_ACK(self, message_type, message_seq):
-        return b"".join([self.convert_to_bytes(message_seq), self.convert_to_bytes(message_seq), b"\r\n"])
+        return b"".join([self.convert_to_bytes(message_seq), self.convert_to_bytes(message_seq)])
 
     def create_HOP_ACK(self, message_seq):
         message_type = 6
