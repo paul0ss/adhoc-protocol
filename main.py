@@ -193,6 +193,7 @@ def read_from_port(ser):
                         write_sys_message('AT+DEST=' + str(previuous_hop))
                         print('Sending a TEXT_ACK to ' + str(previuous_hop))
                         write_protocol_message(protocol.create_TEXT_REQ_ACK(originator_id, destination_id, messag_seq))
+                    #Message fo other node    
                     elif(not destination_id == clientID):
                         write_sys_message('AT+DEST=' + str(previuous_hop))
                         write_protocol_message(protocol.create_HOP_ACK(messag_seq))
@@ -235,7 +236,8 @@ def write_message():
         if(exists == True):
             message = input('Your Message:')
             #number_bytes = len(message.encode('ascii'))
-            serial_port.write(bytes('AT+DEST='+str(dest)+'\r\n', 'ascii'))
+            next_hop = protocol.routing_table.get(dest)[2]
+            serial_port.write(bytes('AT+DEST='+str(next_hop)+'\r\n', 'ascii'))
             time.sleep(0.5)
             # serial_port.write(bytes('AT+SEND='+str(number_bytes)+'\r\n', 'ascii'))
             # time.sleep(0.5)
