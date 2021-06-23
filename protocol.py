@@ -48,7 +48,7 @@ class Protocol:
             result = int(datetime.timestamp(datetime.now())) - stamp
             print('Result: ' + str(result))
             if(result < 180):
-                if(routing_table.get(key)[5] == True):
+                if(self.routing_table.get(key)[5] == True):
                     print('Node number ' + str(key) + 'is outdated')
                 self.routing_table.get(key)[5] = False
     
