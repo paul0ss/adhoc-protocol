@@ -173,7 +173,7 @@ def read_from_port(ser):
                     else:
                         print('RREP not for me from: ' + str(destination_id))
                         if(protocol.check_routing_table(originator_id)):  
-                            print('Forwarding RREP to ' + str(originator_id) + ' from ' + destination_id)
+                            print('Forwarding RREP to ' + str(originator_id) + ' from ' + str(destination_id))
                             write_sys_message('AT+DEST='+str(previuous_hop))
                             hop_count += 1
                             write_protocol_message(protocol.generate_RREP(originator_id, destination_id, originator_seq, previuous_hop, hop_count, destination_seq, lifetime))
