@@ -53,7 +53,7 @@ def setup():
     print('Welcome to the chat, ' + socket.gethostname() + '!')
     global serial_port
     global protocol
-    protocol = protocol.Protocol(2)
+    protocol = protocol.Protocol(clientID)
     # port = input('Enter your Port... \n')
     # port = '/dev/ttyS0'
     # global baudrate
