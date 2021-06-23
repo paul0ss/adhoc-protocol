@@ -49,6 +49,16 @@ def write_protocol_message(message):
         print(str(message))
         time.sleep(1)
 
+def write_text_message(message):
+    lock = threading.RLock()
+    global serial_port
+    if(serial_port.is_open == False):
+        serial_port.open()
+    with lock:
+        serial_port.write(message)
+        print(str(message))
+        time.sleep(1)
+
 def setup():
     print('Welcome to the chat, ' + socket.gethostname() + '!')
     global serial_port
@@ -206,10 +216,10 @@ def write_message():
             number_bytes = len(message.encode('ascii'))
             serial_port.write(bytes('AT+DEST='+str(dest)+'\r\n', 'ascii'))
             time.sleep(0.5)
-            # serial_port.write(bytes('AT+SEND='+str(number_bytes)+'\r\n', 'ascii'))
-            # time.sleep(0.5)
+            serial_port.write(bytes('AT+SEND='+str(number_bytes)+'\r\n', 'ascii'))
+            time.sleep(0.5)
             # Writes the payload
-            write_protocol_message(protocol.create_SEND_TEXT_REQ(dest, message))
+            write_text_message(protocol.create_SEND_TEXT_REQ(dest, message))
             #serial_port.write(bytes(message + '\r\n', 'ascii'))
         else:
             write_protocol_message(protocol.create_RREQ(dest))
