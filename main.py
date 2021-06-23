@@ -42,7 +42,6 @@ def write_protocol_message(message):
     with lock:
         answer = ''
         number_bytes = len(message)
-        print('length of message: ' +str(number_bytes))
         # Writes AT-Command: AT+SEND=number_of_bytes_to_be_sent
         serial_port.write(bytes('AT+SEND='+str(number_bytes)+'\r\n', 'ascii'))
         time.sleep(0.5)

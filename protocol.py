@@ -46,10 +46,10 @@ class Protocol:
         for key in self.routing_table:
             stamp = self.routing_table.get(key)[6]
             result = int(datetime.timestamp(datetime.now())) - stamp
-            print('Result: ' + str(result))
+            #print('Result: ' + str(result))
             if(result > 180):
                 if(self.routing_table.get(key)[5] == True):
-                    print('Node number ' + str(key) + 'is outdated')
+                    print('Node number ' + str(key) + ' is outdated!')
                 self.routing_table.get(key)[5] = False
     
     def convert_to_bytes(self, non_byte_input):
@@ -68,9 +68,9 @@ class Protocol:
         return b"".join([self.convert_to_bytes(message_type),
                         self.convert_to_bytes(uflag),
                         self.convert_to_bytes(hop_count),
-                        self.convert_to_bytes(self.RREQ_ID),
-                        self.convert_to_bytes(self.my_adress),
-                        self.convert_to_bytes(self.my_seq),
+                        self.convert_to_bytes(rreq_id),
+                        self.convert_to_bytes(originator_adress),
+                        self.convert_to_bytes(originator_seq),
                         self.convert_to_bytes(destination_adress),
                         self.convert_to_bytes(destination_seq)])
     
