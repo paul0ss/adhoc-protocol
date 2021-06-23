@@ -64,6 +64,8 @@ def setup():
     global serial_port
     global protocol
     protocol = protocol.Protocol(clientID)
+    global last_seq_list
+    last_seq_list = {13: protocol.get_my_seq}
     # port = input('Enter your Port... \n')
     # port = '/dev/ttyS0'
     # global baudrate
@@ -130,7 +132,7 @@ def read_from_port(ser):
                         #print('didnt recieve some bytes')
                         exit = True
                     #print('uflag '+str(uflag) + ', hop_count '+str(hop_count)+ ", rreq_id "+str(rreq_id)+", originator_id "+str(originator_id)+", originator_seq "+str(originator_seq))
-                    if(not originator_id == clientID and exit == False):
+                    if(not originator_id == clientID and exit == False and last_seq_list.get(originator_id) != rreq_id):
                         if(protocol.check_routing_table(originator_id) == False):
                             protocol.add_to_routing_table(originator_id, originator_seq, hop_count, previuous_hop, [previuous_hop], True, True)
                         #For me
@@ -204,6 +206,9 @@ def read_from_port(ser):
                     message_seq = int(payload[3])
                     print('Recieved STRA for message: ' + str(message_seq))
                     #print(reading)
+        
+                # Add rreq_id to the list of recieve ID from this node
+                last_seq_list[originator_id] = rreq_id
         time.sleep(1)
 
 # writes a Message
