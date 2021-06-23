@@ -216,10 +216,10 @@ def write_message():
             number_bytes = len(message.encode('ascii'))
             serial_port.write(bytes('AT+DEST='+str(dest)+'\r\n', 'ascii'))
             time.sleep(0.5)
-            serial_port.write(bytes('AT+SEND='+str(number_bytes)+'\r\n', 'ascii'))
-            time.sleep(0.5)
+            # serial_port.write(bytes('AT+SEND='+str(number_bytes)+'\r\n', 'ascii'))
+            # time.sleep(0.5)
             # Writes the payload
-            write_text_message(protocol.create_SEND_TEXT_REQ(dest, message))
+            write_protocol_message(protocol.create_SEND_TEXT_REQ(dest, message))
             #serial_port.write(bytes(message + '\r\n', 'ascii'))
         else:
             write_protocol_message(protocol.create_RREQ(dest))
