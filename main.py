@@ -184,10 +184,10 @@ def read_from_port(ser):
                         print('Sending a TEXT_ACK to ' + str(previuous_hop))
                         write_protocol_message(protocol.create_TEXT_REQ_ACK(originator_id, destination_id, messag_seq))
                     elif(not destination_id == clientID):
-                        write_sys_message('AT+DEST=' + previuous_hop)
+                        write_sys_message('AT+DEST=' + str(previuous_hop))
                         write_protocol_message(protocol.create_HOP_ACK(messag_seq))
                         if(protocol.check_routing_table(destination_id)):
-                            write_sys_message('AT+DEST=' + protocol.get_next_hop)
+                            write_sys_message('AT+DEST=' + str(protocol.get_next_hop))
                             write_protocol_message(protocol.generate_SEND_TEXT_REQ(message_type, originator_id, destination_id, messag_seq, message))
                         else:
                             print('No route!') # ROute discovery when no route table entry

@@ -26,7 +26,7 @@ class Protocol:
 
     def add_to_routing_table(self, destination_adress, dest_seq, hop_count, nexthop, precursor_list, dest_seq_valid, route_valid):
         self.routing_table[destination_adress] = [dest_seq, hop_count, nexthop, precursor_list, dest_seq_valid, route_valid, int(datetime.timestamp(datetime.now()))]
-        print('Added ' + str(destination_adress) + 'to my routing table!')
+        print('Added ' + str(destination_adress) + ' to my routing table!')
 
     def get_my_seq(self):
         return self.my_seq
