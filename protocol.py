@@ -45,10 +45,11 @@ class Protocol:
     def check_lifetime(self):
         for key in self.routing_table:
             stamp = self.routing_table.get(key)[6]
-            result = int(datetime.timestamp(datetime.now()) - stamp)
+            result = int(datetime.timestamp(datetime.now())) - stamp
             print('Result: ' + str(result))
-            if(result < 180000):
+            if(result < 180):
                 self.routing_table.get(key)[5] = False
+                print('Node number ' + str(key) + 'is outdated')
     
     def convert_to_bytes(self, non_byte_input):
         if isinstance(non_byte_input, str):
@@ -111,7 +112,7 @@ class Protocol:
             dest_seq = self.my_adress
             self.routing_table.get(destination_adress)[3].append(previous_hop)
             self.routing_table[originator_adress] = [originator_seq, rreq_hop_count, previous_hop, list().append(previous_hop), True, True, int(datetime.timestamp(datetime.now()))]
-        self.check_lifetime()
+        # self.check_lifetime()
         time_to_live = int(datetime.timestamp(datetime.now())) - self.routing_table.get(destination_adress)[6]
         print(time_to_live)
         return self.generate_RREP(originator_adress, destination_adress, originator_seq, destination_seq, previous_hop, rreq_hop_count, dest_seq, time_to_live)
