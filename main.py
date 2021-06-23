@@ -180,11 +180,11 @@ def read_from_port(ser):
                 if(message_type == 4):
                     print('Recieved RREP-ACK')
                 if(message_type == 5):
-                    print('Recieved STR:')
                     originator_id = int(payload[1])
                     destination_id = int(payload[2])
                     messag_seq = int(payload[3])
                     message = payload[4:].decode('ascii')
+                    #Message for me
                     if(destination_id == clientID):
                         print('Message recieved from ' + str(originator_id) + ': ' + str(message))
                         write_sys_message('AT+DEST=' + str(previuous_hop))
@@ -193,11 +193,17 @@ def read_from_port(ser):
                         write_sys_message('AT+DEST=' + str(previuous_hop))
                         print('Sending a TEXT_ACK to ' + str(previuous_hop))
                         write_protocol_message(protocol.create_TEXT_REQ_ACK(originator_id, destination_id, messag_seq))
-                    #Message fo other node    
+                    #Message for other node    
                     elif(not destination_id == clientID):
+                        print('Message recieved for ' + str(destination_id) + ' from ' + str(originator_id))
+
+                        #send ACK to previous hope
                         write_sys_message('AT+DEST=' + str(previuous_hop))
                         write_protocol_message(protocol.create_HOP_ACK(messag_seq))
+
+                        #check for existense in the routing table
                         if(protocol.check_routing_table(destination_id)):
+                            print('Forwarding message to ' + str(protocol.get_next_hop))
                             write_sys_message('AT+DEST=' + str(protocol.get_next_hop))
                             write_protocol_message(protocol.generate_SEND_TEXT_REQ(message_type, originator_id, destination_id, messag_seq, message))
                         else:
