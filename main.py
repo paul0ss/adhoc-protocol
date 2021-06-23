@@ -105,6 +105,7 @@ def handle_data(data):
 
 def read_from_port(ser):
     while True:
+        exit = False
         reading = ser.readline()
         protocol.check_lifetime()
         if((not reading.startswith(b"AT")) and reading != b""):
@@ -118,41 +119,43 @@ def read_from_port(ser):
                 message_type = int(payload[0])
                 ##CASE RREQ
                 if(message_type == 1):
-                    # try:
-                    uflag = int(payload[1])
-                    hop_count = int(payload[2])
-                    rreq_id = int(payload[3])
-                    originator_id = int(payload[4])
-                    originator_seq = int(payload[5])
-                    destination_id = int(payload[6])
-                    destination_seq = int(payload[7])
-                    # except:
-                    #     print('didnt recieve some bytes')
+                    try:
+                        uflag = int(payload[1])
+                        hop_count = int(payload[2])
+                        rreq_id = int(payload[3])
+                        originator_id = int(payload[4])
+                        originator_seq = int(payload[5])
+                        destination_id = int(payload[6])
+                        destination_seq = int(payload[7])
+                    except:
+                        #print('didnt recieve some bytes')
+                        exit = True
                     #print('uflag '+str(uflag) + ', hop_count '+str(hop_count)+ ", rreq_id "+str(rreq_id)+", originator_id "+str(originator_id)+", originator_seq "+str(originator_seq))
-                    if(protocol.check_routing_table(originator_id) == False):
-                        protocol.add_to_routing_table(originator_id, originator_seq, hop_count, previuous_hop, [previuous_hop], True, True)
-                    #For me
-                    if(destination_id == clientID):
-                        print('RREQ for me: ' + 'uflag '+str(uflag) + ', hop_count '+str(hop_count)+ ", rreq_id "+str(rreq_id)+", originator_id "+str(originator_id)+", originator_seq "+str(originator_seq))
-                        print('previous hop: ' + str(previuous_hop))
-                        write_sys_message('AT+DEST='+str(previuous_hop))
-                        write_protocol_message(protocol.create_RREP(originator_id, destination_id, originator_seq, destination_seq, previuous_hop, hop_count))
-                    #Not for me
-                    else:
-                        print('RREQ NOT for me: ' + 'uflag '+str(uflag) + ', hop_count '+str(hop_count)+ ", rreq_id "+str(rreq_id)+", originator_id "+str(originator_id)+", originator_seq "+str(originator_seq))
-                        #in routing table
-                        if(protocol.check_routing_table(destination_id)):
-                            #print('in routing table')
+                    if(not originator_id == clientID and exit == False):
+                        if(protocol.check_routing_table(originator_id) == False):
+                            protocol.add_to_routing_table(originator_id, originator_seq, hop_count, previuous_hop, [previuous_hop], True, True)
+                        #For me
+                        if(destination_id == clientID):
+                            print('RREQ for me: ' + 'uflag '+str(uflag) + ', hop_count '+str(hop_count)+ ", rreq_id "+str(rreq_id)+", originator_id "+str(originator_id)+", originator_seq "+str(originator_seq))
                             print('previous hop: ' + str(previuous_hop))
                             write_sys_message('AT+DEST='+str(previuous_hop))
                             write_protocol_message(protocol.create_RREP(originator_id, destination_id, originator_seq, destination_seq, previuous_hop, hop_count))
-                        #not in routing table
-                        elif(not originator_id == clientID):
-                            #print("Not in the table")
-                            hop_count += 1
-                            print('Forwarded message RREQ from:' + str(originator_id))
-                            print(protocol.generate_RREQ(uflag, hop_count, rreq_id, originator_id, originator_seq, destination_id, destination_seq))
-                            write_protocol_message(protocol.generate_RREQ(uflag, hop_count, rreq_id, originator_id, originator_seq, destination_id, destination_seq))
+                        #Not for me
+                        else:
+                            print('RREQ NOT for me: ' + 'uflag '+str(uflag) + ', hop_count '+str(hop_count)+ ", rreq_id "+str(rreq_id)+", originator_id "+str(originator_id)+", originator_seq "+str(originator_seq))
+                            #in routing table
+                            if(protocol.check_routing_table(destination_id)):
+                                #print('in routing table')
+                                print('previous hop: ' + str(previuous_hop))
+                                write_sys_message('AT+DEST='+str(previuous_hop))
+                                write_protocol_message(protocol.create_RREP(originator_id, destination_id, originator_seq, destination_seq, previuous_hop, hop_count))
+                            #not in routing table
+                            elif(not originator_id == clientID):
+                                #print("Not in the table")
+                                hop_count += 1
+                                print('Forwarded message RREQ from:' + str(originator_id))
+                                print(protocol.generate_RREQ(uflag, hop_count, rreq_id, originator_id, originator_seq, destination_id, destination_seq))
+                                write_protocol_message(protocol.generate_RREQ(uflag, hop_count, rreq_id, originator_id, originator_seq, destination_id, destination_seq))
                 if(message_type == 2):
                     hop_count = int(payload[1])
                     originator_id = int(payload[2])
@@ -179,6 +182,7 @@ def read_from_port(ser):
                     if(destination_id == clientID):
                         print('Message recieved from ' + str(originator_id) + ': ' + str(message))
                         write_sys_message('AT+DEST=' + str(previuous_hop))
+                        print('Sending a TEXT_ACK to ' + str(previuous_hop))
                         write_protocol_message(protocol.create_TEXT_REQ_ACK(originator_id, destination_id, messag_seq))
                     elif(not destination_id == clientID):
                         write_sys_message('AT+DEST=' + previuous_hop)
