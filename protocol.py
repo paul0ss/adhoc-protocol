@@ -116,7 +116,7 @@ class Protocol:
         # self.check_lifetime()
         time_to_live = int(datetime.timestamp(datetime.now())) - self.routing_table.get(destination_adress)[6]
         print(time_to_live)
-        return self.generate_RREP(originator_adress, destination_adress, originator_seq, destination_seq, previous_hop, rreq_hop_count, dest_seq, time_to_live)
+        return self.generate_RREP(originator_adress, destination_adress, originator_seq, destination_seq, previous_hop, hop_count, dest_seq, time_to_live)
 
     def create_RERR(self, destination_adress):
         message_type = 3

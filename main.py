@@ -181,6 +181,9 @@ def read_from_port(ser):
                     if(destination_id == clientID):
                         print('Message recieved from ' + str(originator_id) + ': ' + str(message))
                         write_sys_message('AT+DEST=' + str(previuous_hop))
+                        print('Sending a TEXT_HOP_ACK to ' + str(previuous_hop))
+                        write_protocol_message(protocol.create_HOP_ACK(messag_seq))
+                        write_sys_message('AT+DEST=' + str(previuous_hop))
                         print('Sending a TEXT_ACK to ' + str(previuous_hop))
                         write_protocol_message(protocol.create_TEXT_REQ_ACK(originator_id, destination_id, messag_seq))
                     elif(not destination_id == clientID):
