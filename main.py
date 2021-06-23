@@ -217,7 +217,13 @@ def read_from_port(ser):
                     originator_id = int(payload[1])
                     destination_id = int(payload[2])
                     message_seq = int(payload[3])
-                    print('Recieved STRA for message: ' + str(message_seq))
+                    if(originator_id == clientID):
+                        print('Recieved STRA for message: ' + str(message_seq))
+                    else:
+                        if(protocol.check_routing_table(originator_id)):
+                            next_hop = protocol.routing_table.get(originator_id)[2]
+                            write_sys_message('AT+DEST=' + str(next_hop))
+                            write_protocol_message(protocol.generate_TEXT_REQ_ACK(message_type, originator_id, destination_id, message_seq))
                     #print(reading)
         
                 # Add rreq_id to the list of recieve ID from this node
