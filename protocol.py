@@ -118,8 +118,23 @@ class Protocol:
         print(time_to_live)
         return self.generate_RREP(originator_adress, destination_adress, originator_seq, previous_hop, hop_count, dest_seq, time_to_live)
 
-    def create_RERR(self, destination_adress):
+    def generate_RERR(self, message_type, destionation_count, destination_adress, destination_seq, additional_adresses, additional_seq):
+        return b"".join([self.convert_to_bytes(message_type), 
+                        self.convert_to_bytes(destionation_count),
+                        self.convert_to_bytes(destination_adress),
+                        self.convert_to_bytes(destination_seq),
+                        self.convert_to_bytes(additional_adresses),
+                        self.convert_to_bytes(additional_seq)])
+
+    def create_RERR(self, destination_count, destination_adresses, destination_seqs):
         message_type = 3
+        adress_seq_list = []
+        for i in range(0, destination_count):
+            adress_seq_list.append(self.convert_to_bytes(destination_adresses[i]))
+            adress_seq_list.append(self.convert_to_bytes(destination_seqs[i]))
+        result = [self.convert_to_bytes(message_type), self.convert_to_bytes(destination_count)]
+        result.extend(adress_seq_list)
+        return b"".join(result)
     
     def create_RREP_ACK(self):
         message_type = 4

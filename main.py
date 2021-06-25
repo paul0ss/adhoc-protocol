@@ -2,6 +2,7 @@
 import threading
 import serial
 import time
+from datetime import datetime
 import os
 import socket
 import protocol
@@ -12,9 +13,22 @@ baudrate=115200
 timeout = 0
 clientID = 2
 
+
+
 # serial_port = serial.Serial(port, timeout=0)
 config = 'AT+CFG=433000000,20,9,10,4,1,0,0,0,0,3000,8,10'
 #config = 'AT+CFG=433000000,20,9,12,4,1,0,0,0,0,3000,8,4'
+
+def set_time():
+    global origin_time
+    origin_time = int(datetime.timestamp(datetime.now()))
+
+def check_timer(time_in_sec):
+    if (int(datetime.timestamp(datetime.now())) - origin_time > time_in_sec):
+        return False
+    else:
+        return True
+
 
 def read_sys_answer():
      loop = True
@@ -177,6 +191,22 @@ def read_from_port(ser):
                             write_sys_message('AT+DEST='+str(originator_id))
                             hop_count += 1
                             write_protocol_message(protocol.generate_RREP(originator_id, destination_id, originator_seq, previuous_hop, hop_count, destination_seq, lifetime))
+                if(message_type == 3):
+                    destination_count = int(payload[1])
+                    unreachable_destination_adress = int(payload[2])
+                    unreachable_destination_seq = int(payload[3])
+
+                    for i in range(4, (4 + destination_count) * 2):
+                        if(not i % 2):
+                            if(protocol.check_routing_table(i)):
+                                protocol.routing_table.get(i)[5] = False
+
+                    print('Recieved RERR for ' + str(unreachable_destination_adress))
+                    if(protocol.check_routing_table(unreachable_destination_adress)):
+                        protocol.routing_table.get(unreachable_destination_adress)[5] = False
+                        if(unreachable_destination_adress - protocol.routing_table.get(unreachable_destination_adress)[0] > 0):
+                            protocol.routing_table.get(unreachable_destination_adress)[0] = unreachable_destination_seq
+
                 if(message_type == 4):
                     print('Recieved RREP-ACK')
                 if(message_type == 5):
