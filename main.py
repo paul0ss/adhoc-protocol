@@ -257,7 +257,8 @@ def read_from_port(ser):
                     #print(reading)
         
                 # Add rreq_id to the list of recieve ID from this node
-                last_seq_list[originator_id] = rreq_id
+                if(rreq_id != None):
+                    last_seq_list[originator_id] = rreq_id
         time.sleep(1)
 
 # writes a Message
