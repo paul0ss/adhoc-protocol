@@ -124,6 +124,7 @@ def read_from_port(ser):
         reading = ser.readline()
         protocol.check_lifetime()
         if((not reading.startswith(b"AT")) and reading != b""):
+            rreq_id = -1
             # partials = reading.split(',', 3)
             # print('Recieved message from ' + partials[1] + ': ' + partials[3])
             #print(reading)
@@ -257,7 +258,7 @@ def read_from_port(ser):
                     #print(reading)
         
                 # Add rreq_id to the list of recieve ID from this node
-                if(rreq_id != None):
+                if(rreq_id > 0):
                     last_seq_list[originator_id] = rreq_id
         time.sleep(1)
 
